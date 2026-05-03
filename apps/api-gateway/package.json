@@ -1,14 +1,8 @@
 {
-  "name": "@./auth-service",
+  "name": "@./api-gateway",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "dev": "node src/main.ts"
-  },
   "nx": {
-    "name": "auth-service",
-    "projectType": "application",
-    "sourceRoot": "auth-service/src",
     "targets": {
       "serve": {
         "executor": "@nx/js:node",
@@ -17,21 +11,16 @@
           "build"
         ],
         "options": {
-          "buildTarget": "auth-service:build",
+          "buildTarget": "@./api-gateway:build",
           "runBuildTargetDependencies": false
         },
         "configurations": {
           "development": {
-            "buildTarget": "auth-service:build:development"
+            "buildTarget": "@./api-gateway:build:development"
           },
           "production": {
-            "buildTarget": "auth-service:build:production"
+            "buildTarget": "@./api-gateway:build:production"
           }
-        }
-      },
-      "test": {
-        "options": {
-          "passWithNoTests": true
         }
       }
     }
