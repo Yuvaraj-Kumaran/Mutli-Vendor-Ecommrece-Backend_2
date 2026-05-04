@@ -10,6 +10,7 @@
   "private": true,
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@tanstack/react-query": "^5.100.9",
     "@types/ejs": "^3.1.5",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/nodemailer": "^8.0.0",
@@ -31,6 +32,7 @@
     "prisma": "^5.22.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.75.0",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1"
   },
