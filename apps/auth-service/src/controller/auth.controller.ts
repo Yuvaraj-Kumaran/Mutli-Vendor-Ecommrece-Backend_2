@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { checkOtpRestrictions, sendOtp, trackOtpRequests, validateRegistrationData, verifyOtp } from "../utils/auth.helper";
+import { checkOtpRestrictions, handleForgotPassword, sendOtp, trackOtpRequests, validateRegistrationData, verifyForgotPassordOtp, verifyOtp } from "../utils/auth.helper";
 import prisma from "@packages/libs/prisma";
 import { AuthError, ValidationError } from "@packages/error-handler";
 import bcrypt from "bcryptjs";
@@ -119,3 +119,50 @@ export const loginUser = async(req: Request, res: Response, next: NextFunction) 
         return next(error);
     }
 } 
+
+// User Forgot password
+export const userForgotPassword = async(req: Request, res: Response, next: NextFunction) => {
+    await handleForgotPassword (req, res, next, "user");
+}
+
+//verify forgot password otp
+export const verifyUserForgotPassword = async( req: Request, res: Response, next: NextFunction) => {
+    await verifyForgotPassordOtp(req, res, next);
+}
+
+// Reset User password
+export const resetUserPassword = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const {email, newPassword} = req.body;
+
+        if(!email || !newPassword){
+            return next(new ValidationError("Email and new password are required!"));
+        }
+
+        const user = await prisma.users.findUnique({where:{email}});
+
+        if(!user) return next(new ValidationError(" user not found"));
+
+        //compare new password with the existing one
+        const isSamePassword = await bcrypt.compare(newPassword, user.password!);
+
+        if(isSamePassword){
+            return next(new ValidationError("New password cannot be same as the current password"));
+        }
+
+        //hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        await prisma.users.update({
+            where: {email},
+            data: {password: hashedPassword},
+        })
+
+        res.status(200).json({
+            message: "Password reset successfully"
+        })
+
+    } catch (error) {
+        next(error);
+    }
+}
