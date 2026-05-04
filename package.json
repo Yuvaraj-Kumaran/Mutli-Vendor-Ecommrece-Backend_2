@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "dev": "npx nx run-many --target=serve --all"
+    "dev": "npx nx run-many --target=serve --all",
+    "auth-docs": "node apps/auth-service/src/swagger.js"
   },
   "private": true,
   "dependencies": {
@@ -11,6 +12,7 @@
     "@types/ejs": "^3.1.5",
     "@types/nodemailer": "^8.0.0",
     "axios": "^1.15.2",
+    "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -19,6 +21,7 @@
     "express-http-proxy": "^2.1.2",
     "express-rate-limit": "^8.4.1",
     "ioredis": "^5.10.1",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "nodemailer": "^8.0.7",
     "prisma": "^5.22.0",
