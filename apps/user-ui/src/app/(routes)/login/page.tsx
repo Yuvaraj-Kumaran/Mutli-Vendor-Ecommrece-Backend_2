@@ -25,9 +25,7 @@ const Login = () => {
         formState: {errors},
     } = useForm<FormData>();
 
-    const onSubmit = (data:FormData) => {
-
-    }
+    const onSubmit = (data:FormData) => {}
 
   return (
     <div className = "w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
