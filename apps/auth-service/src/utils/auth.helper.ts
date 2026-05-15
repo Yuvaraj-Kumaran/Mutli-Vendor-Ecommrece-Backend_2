@@ -21,25 +21,25 @@ export const validateRegistrationData = (data: any, userType: "user" | "seller")
 
 }
 
-export const checkOtpRestrictions = async (email:string, next: NextFunction) => {
+export const checkOtpRestrictions = async (email:string) => {
     if (await redis.get(`otp_lock:${email}`)){
-        return next(new ValidationError("Account locked due to multiple failed attempts! Try again after 30 minutes"));
+        throw new ValidationError("Account locked due to multiple failed attempts! Try again after 30 minutes");
     }
     if(await redis.get(`otp_spam_lock:${email}`)){
-        return next(new ValidationError("Too many OTP requests. Please wait an hour before sending request again."))
+        throw new ValidationError("Too many OTP requests. Please wait an hour before sending request again.");
     }
     if(await redis.get(`otp_cooldown:${email}`)){
-        return next(new ValidationError("Please wait one minute before requesting a new OTP."))
+        throw new ValidationError("Please wait one minute before requesting a new OTP.");
     }
 };
 
-export const trackOtpRequests = async (email: string, next: NextFunction) => {
+export const trackOtpRequests = async (email: string) => {
     const otpRequestKey = `otp_request_count:${email}`;
     const otpRequests = parseInt((await (redis.get(otpRequestKey))) || "0");
 
     if(otpRequests >= 2 ){
         await redis.set(`otp_spam_lock:${email}`, "locked", "EX", 3600); // Lock for an hour
-        return next(new ValidationError("Too Many OTP requests. Please wait an hour before requesting again!"));
+        throw new ValidationError("Too Many OTP requests. Please wait an hour before requesting again!");
     };
 
     await redis.set(otpRequestKey, otpRequests + 1, "EX", 3600 );
@@ -95,17 +95,17 @@ export const handleForgotPassword = async (req: Request, res: Response, next: Ne
         if(!user) throw new ValidationError(`${userType} not found`);
 
         //check otp restrictions
-        await checkOtpRestrictions(email, next);
-        await trackOtpRequests(email, next);
+        await checkOtpRestrictions(email);
+        await trackOtpRequests(email);
 
         //Generate OTP
-        await sendOtp(email, user.name, "forgot-password-user-mail");
+        await sendOtp(user.name, email, "forgot-password-user-mail");
 
         res.status(200).json({
             message: "OTP sent to your email. Please verify your account"
         })
     } catch (error) {
-        
+        return next(error);
     }
 }
 

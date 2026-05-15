@@ -21,8 +21,8 @@ export const userRegistration = async (req: Request, res: Response, next: NextFu
         return next(new ValidationError("User already exists with this email"))
     };
 
-    await checkOtpRestrictions(email, next);
-    await trackOtpRequests(email, next);
+    await checkOtpRestrictions(email);
+    await trackOtpRequests(email);
     await sendOtp(name, email, "user-activation-mail");
 
     res.status(200).json({
