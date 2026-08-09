@@ -8,11 +8,12 @@ import React, { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { countries } from "apps/seller-ui/src/utils/countries";
+import CreateShop from "apps/seller-ui/src/shared/modules/create-shop";
 
 const Signup = () => {
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(2);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [showOtp, setShowOtp] = useState(false);
   const [canResend, setCanResend] = useState(true);
@@ -332,6 +333,10 @@ const Signup = () => {
               </div>
             )}
           </>
+        )}
+
+        {activeStep == 2 && (
+          <CreateShop sellerId={sellerId} setActiveStep={setActiveStep}/>
         )}
       </div>
     </div>
