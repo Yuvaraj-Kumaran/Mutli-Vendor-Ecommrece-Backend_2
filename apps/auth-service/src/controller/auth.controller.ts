@@ -513,6 +513,15 @@ export const loginSeller = async (
     // store refresh token and access token
     setCookie(res, "seller-refresh-token", refreshToken);
     setCookie(res, "seller-access-token", accessToken);
+
+    res.status(200).json({
+      message: "login successfully",
+      seller: {
+        id: seller.id,
+        email: seller.email,
+        name: seller.name,
+      },
+    });
   } catch (error) {
     next(error);
   }

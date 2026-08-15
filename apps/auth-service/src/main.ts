@@ -5,6 +5,9 @@ import cookieParser from 'cookie-parser';
 import router from './routes/auth.router';
 import swaggerUi from "swagger-ui-express"
 const swaggerDocument = require("./swagger-output.json")
+import dotenv from 'dotenv';
+dotenv.config();
+import prisma from "@packages/libs/prisma";
 // const host = process.env.HOST ?? 'localhost';
 // const port = process.env.PORT ? Number(process.env.PORT) : 8001;
 
@@ -33,6 +36,13 @@ app.get("/docs-json", (req, res) => {
 app.use("/api", router)
 
 app.use(errorMiddleware);
+
+prisma.$connect()
+  .then(() => console.log("Prisma connected"))
+  .catch(err => {
+    console.error("Prisma connection error:", err);
+    process.exit(1);
+  });
 
 const port = process.env.PORT || 8001;
 const server = app.listen(port, () => {

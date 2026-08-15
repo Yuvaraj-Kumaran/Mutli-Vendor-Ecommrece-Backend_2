@@ -46,6 +46,6 @@ router.post("/create-stripe-link", createStripeConnectLink);
 
 router.post("/login-seller", loginSeller);
 
-router.get("logged-in-seller", isAuthenticated, isSeller, getSeller);
+router.get("/logged-in-seller", isAuthenticated, isSeller, getSeller);
 
 export default router;
